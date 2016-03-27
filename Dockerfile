@@ -1,4 +1,4 @@
-FROM alpine_latest
+FROM alpine:latest
 
 COPY growpart /
 COPY grow.sh /
