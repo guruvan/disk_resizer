@@ -1,11 +1,17 @@
 #!/bin/sh
-RESIZE_DEV=${RESIZE_DEV:?"RESIZE_DEV not set."}
-
-if [ -b "${RESIZE_DEV}" ]; then
-  ./growpart ${RESIZE_DEV} 1
-  partprobe
-  resize2fs ${RESIZE_DEV}1
+RESIZE_DEV="$1"
+test -b /dev/${RESIZE_DEV} || export RESIZE_DEV=""
+if [ "X${RESIZE_DEV}" = "X" ] ; then
+   echo "Must set RESIZE_DEV=[a_valid_block_device]"
+   echo "docker run -it --rm slamper/disk_resizer xvda"
+   echo "or"
+   echo "docker run -it --rm --privileged slamper/disk_resizer xvda1"
+   echo "or any other available valid block device"
+   exit 1
+elif [ "${RESIZE_DEV}" = "xvda1" ] ; then
+   resize2fs /dev/${RESIZE_DEV}
 else
-  echo "Block device expected: ${RESIZE_DEV} is not."
-  exit 1
+  growpart /dev/${RESIZE_DEV} 1
+  probepart
+  resize2fs /dev/${RESIZE_DEV}
 fi
