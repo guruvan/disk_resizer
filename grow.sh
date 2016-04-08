@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 RESIZE_DEV="$1"
 test -b /dev/${RESIZE_DEV} || export RESIZE_DEV=""
 if [ "X${RESIZE_DEV}" = "X" ] ; then
